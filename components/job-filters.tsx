@@ -92,7 +92,7 @@ export function JobFilters({ onFiltersChange }: JobFiltersProps) {
             className="pl-10"
           />
         </div>
-        <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-2">
+        <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-2 bg-popover-foreground text-background">
           <Filter className="h-4 w-4" />
           Filters
           {hasActiveFilters && (

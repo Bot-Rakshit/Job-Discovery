@@ -57,20 +57,13 @@ export default function JobListingsPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Briefcase className="h-6 w-6 text-primary" />
-              </div>
+              
               <div>
-                <h1 className="text-3xl font-bold text-foreground">Job Listings</h1>
-                <p className="text-muted-foreground">Discover opportunities from various portals and companies</p>
+                <h1 className="font-bold font-mono text-4xl text-primary">Job Listings</h1>
+                
               </div>
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/admin">
-                <Shield className="mr-2 h-4 w-4" />
-                Admin
-              </Link>
-            </Button>
+            
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

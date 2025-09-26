@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+import { useRouter } from "next/navigation"
 import type { Job } from "@/lib/db"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -25,6 +27,8 @@ interface JobCardProps {
 }
 
 export function JobCard({ job, onEdit, onDelete, showActions = true }: JobCardProps) {
+  const router = useRouter()
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
@@ -33,8 +37,25 @@ export function JobCard({ job, onEdit, onDelete, showActions = true }: JobCardPr
     })
   }
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Don't navigate if clicking on interactive elements or in admin mode
+    if (showActions && (onEdit || onDelete)) return
+
+    const target = e.target as HTMLElement
+    if (target.closest("button") || target.closest("a")) return
+
+    router.push(`/job/${job.id}`)
+  }
+
+  const isClickable = !showActions || (!onEdit && !onDelete)
+
   return (
-    <Card className="group hover:shadow-lg transition-all duration-200 border-border bg-card">
+    <Card
+      className={`group hover:shadow-lg transition-all duration-200 border-border text-popover bg-background ${
+        isClickable ? "cursor-pointer" : ""
+      }`}
+      onClick={handleCardClick}
+    >
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
@@ -51,14 +72,31 @@ export function JobCard({ job, onEdit, onDelete, showActions = true }: JobCardPr
           {showActions && (onEdit || onDelete) && (
             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
               {onEdit && (
-                <Button variant="ghost" size="sm" onClick={() => onEdit(job)} className="h-8 w-8 p-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onEdit(job)
+                  }}
+                  className="h-8 w-8 p-0"
+                >
                   <Edit className="h-4 w-4" />
                 </Button>
               )}
               {onDelete && (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive hover:text-destructive">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                      }}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </AlertDialogTrigger>
@@ -122,7 +160,7 @@ export function JobCard({ job, onEdit, onDelete, showActions = true }: JobCardPr
           <span className="text-xs text-muted-foreground">Posted {formatDate(job.created_at)}</span>
           {job.form_link && (
             <Button asChild size="sm">
-              <a href={job.form_link} target="_blank" rel="noopener noreferrer">
+              <a href={job.form_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                 Apply Now
                 <ExternalLink className="h-3 w-3 ml-1" />
               </a>
