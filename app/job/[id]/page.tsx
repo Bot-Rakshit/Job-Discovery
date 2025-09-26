@@ -53,7 +53,7 @@ export default async function JobPage({ params }: JobPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="container mx-auto px-4 py-8 max-w-4xl text-primary text-popover-foreground text-popover text-card-foreground text-card text-foreground text-card text-popover text-muted">
         <Button variant="ghost" asChild className="mb-8">
           <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" />
@@ -67,7 +67,7 @@ export default async function JobPage({ params }: JobPageProps) {
               <Building2 className="h-10 w-10 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-4xl font-bold text-foreground mb-3 leading-tight">{job.title}</h1>
+              <h1 className="text-4xl font-bold mb-3 leading-tight text-primaryroundoregroundalightforegroundforeground.title}</h1>
               <p className="text-2xl text-muted-foreground font-medium mb-6">{job.company}</p>
 
               <div className="flex flex-wrap gap-3 mb-6">

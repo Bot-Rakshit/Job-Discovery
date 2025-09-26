@@ -89,7 +89,7 @@ export function JobFilters({ onFiltersChange }: JobFiltersProps) {
             placeholder="Search jobs, companies, or descriptions..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10"
+            className="pl-10 border-2 border-border"
           />
         </div>
         <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-2 bg-popover-foreground text-background">

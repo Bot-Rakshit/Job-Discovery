@@ -63,10 +63,10 @@ export function JobCard({ job, onEdit, onDelete, showActions = true }: JobCardPr
               <Building2 className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+              <h3 className="font-semibold text-lg group-hover:text-primary transition-colors text-black">
                 {job.title}
               </h3>
-              <p className="text-muted-foreground font-medium">{job.company}</p>
+              <p className="font-medium bg-background text-secondary-foreground">{job.company}</p>
             </div>
           </div>
           {showActions && (onEdit || onDelete) && (
