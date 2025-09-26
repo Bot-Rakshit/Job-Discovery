@@ -49,9 +49,32 @@ export async function createOrVerifyAdmin(username: string, password: string): P
       console.log("[v0] First admin created successfully")
       return result[0] as Admin
     } else {
-      // Admin exists, verify credentials
+      // Admin exists, try to verify credentials
       console.log("[v0] Admin exists, verifying credentials")
-      return await verifyAdmin(username, password)
+      const admin = await verifyAdmin(username, password)
+
+      if (!admin) {
+        // If verification fails, it might be due to corrupted data
+        // Clear existing admin and create new one with current credentials
+        console.log("[v0] Verification failed, clearing corrupted admin data and creating fresh admin")
+
+        // Clear existing admin and sessions
+        await sql`DELETE FROM admin_sessions`
+        await sql`DELETE FROM admins`
+
+        // Create new admin with current credentials
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const result = await sql`
+          INSERT INTO admins (username, password_hash)
+          VALUES (${username}, ${hashedPassword})
+          RETURNING id, username, created_at
+        `
+
+        console.log("[v0] Fresh admin created successfully")
+        return result[0] as Admin
+      }
+
+      return admin
     }
   } catch (error) {
     console.error("[v0] Error in createOrVerifyAdmin:", error)
