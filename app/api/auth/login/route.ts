@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { verifyAdmin, createSession } from "@/lib/auth"
+import { createOrVerifyAdmin, createSession } from "@/lib/auth"
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Username and password are required" }, { status: 400 })
     }
 
-    console.log("[v0] Attempting to verify admin...")
-    const admin = await verifyAdmin(username, password)
+    console.log("[v0] Attempting to create or verify admin...")
+    const admin = await createOrVerifyAdmin(username, password)
 
     if (!admin) {
       console.log("[v0] Admin verification failed - invalid credentials")

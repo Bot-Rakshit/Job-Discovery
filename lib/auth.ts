@@ -25,16 +25,44 @@ function generateSessionToken(): string {
     .join("")
 }
 
+export async function createOrVerifyAdmin(username: string, password: string): Promise<Admin | null> {
+  try {
+    console.log("[v0] Checking if admin exists...")
+
+    // Check if any admin exists
+    const existingAdmins = await sql`SELECT COUNT(*) as count FROM admins`
+    const adminCount = existingAdmins[0].count
+
+    console.log("[v0] Admin count:", adminCount)
+
+    if (adminCount === 0) {
+      // No admin exists, create one with the provided credentials
+      console.log("[v0] No admin exists, creating first admin with provided credentials")
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+      const result = await sql`
+        INSERT INTO admins (username, password_hash)
+        VALUES (${username}, ${hashedPassword})
+        RETURNING id, username, created_at
+      `
+
+      console.log("[v0] First admin created successfully")
+      return result[0] as Admin
+    } else {
+      // Admin exists, verify credentials
+      console.log("[v0] Admin exists, verifying credentials")
+      return await verifyAdmin(username, password)
+    }
+  } catch (error) {
+    console.error("[v0] Error in createOrVerifyAdmin:", error)
+    return null
+  }
+}
+
 // Verify admin credentials
 export async function verifyAdmin(username: string, password: string): Promise<Admin | null> {
   try {
     console.log("[v0] Querying database for username:", username)
-    console.log("[v0] Input password:", JSON.stringify(password))
-    console.log("[v0] Input password length:", password.length)
-    console.log(
-      "[v0] Input password chars:",
-      password.split("").map((c) => c.charCodeAt(0)),
-    )
 
     const result = await sql`
       SELECT id, username, password_hash, created_at 
@@ -50,15 +78,8 @@ export async function verifyAdmin(username: string, password: string): Promise<A
     }
 
     const admin = result[0]
-    console.log("[v0] Stored password hash:", admin.password_hash)
-    console.log("[v0] Hash starts with $2b$:", admin.password_hash.startsWith("$2b$"))
-    console.log("[v0] Hash length:", admin.password_hash.length)
+    console.log("[v0] Comparing password with hash...")
 
-    console.log("[v0] Testing hash with 'admin123'...")
-    const testResult = await bcrypt.compare("admin123", admin.password_hash)
-    console.log("[v0] Test with 'admin123':", testResult ? "Valid" : "Invalid")
-
-    console.log("[v0] Comparing input password with hash...")
     const isValid = await bcrypt.compare(password, admin.password_hash)
     console.log("[v0] Password comparison result:", isValid ? "Valid" : "Invalid")
 

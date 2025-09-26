@@ -6,8 +6,7 @@ import type { Job } from "@/lib/db"
 import { JobCard } from "@/components/job-card"
 import { JobFilters } from "@/components/job-filters"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, Briefcase, Shield, Search, MapPin, Building2 } from "lucide-react"
+import { Loader2, Briefcase, Shield, Search } from "lucide-react"
 
 export default function JobListingsPage() {
   const [jobs, setJobs] = useState<Job[]>([])
@@ -51,11 +50,6 @@ export default function JobListingsPage() {
     fetchJobs()
   }, [fetchJobs])
 
-  // Get stats for display
-  const totalJobs = jobs.length
-  const uniqueCompanies = new Set(jobs.map((job) => job.company)).size
-  const uniqueLocations = new Set(jobs.map((job) => job.location).filter(Boolean)).size
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
@@ -78,42 +72,6 @@ export default function JobListingsPage() {
               </Link>
             </Button>
           </div>
-
-          {/* Stats Overview */}
-          {totalJobs > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Available Jobs</CardTitle>
-                  <Briefcase className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{totalJobs}</div>
-                  <p className="text-xs text-muted-foreground">Open positions</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Companies</CardTitle>
-                  <Building2 className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{uniqueCompanies}</div>
-                  <p className="text-xs text-muted-foreground">Hiring companies</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Locations</CardTitle>
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{uniqueLocations}</div>
-                  <p className="text-xs text-muted-foreground">Different locations</p>
-                </CardContent>
-              </Card>
-            </div>
-          )}
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="text-sm text-muted-foreground">
