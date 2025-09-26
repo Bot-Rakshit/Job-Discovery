@@ -208,10 +208,7 @@ export default function AdminDashboard() {
             <div className="text-sm text-muted-foreground">
               {jobsLoading ? "Loading..." : `${jobs.length} job${jobs.length !== 1 ? "s" : ""} found`}
             </div>
-            <Button onClick={() => setShowAddForm(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Job
-            </Button>
+            <AddJobForm onJobAdded={handleJobAdded} />
           </div>
         </div>
 
@@ -250,7 +247,6 @@ export default function AdminDashboard() {
         )}
 
         {/* Add Job Modal */}
-        {showAddForm && <AddJobForm onJobAdded={handleJobAdded} onCancel={() => setShowAddForm(false)} />}
 
         {/* Edit Job Modal */}
         {editingJob && <AddJobForm editJob={editingJob} onJobAdded={fetchJobs} onEditComplete={handleEditComplete} />}
